@@ -11,10 +11,11 @@ def main():
     #-----------------------------------------------------------#
     """
     # Handle the data and insert it into MongoDB
-    #dataHandler()
+    
+    dataHandler()
 
     # Query the best universities and print the formatted table
-    query = queryBestUniversities("university-data", "februaryCollection", 100)
+    query = queryBestUniversities("university-data", "februaryCollection", 300)
     print(formatTable(query))
 
 def dataHandler():
