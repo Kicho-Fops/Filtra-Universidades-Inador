@@ -22,6 +22,10 @@ function DropText()  {
             flexDirection={"column"}
             alignItems={"center"}
             justifyContent={"center"}
+            data-state="open"
+            _open={{
+              animation: "fade-in 2000ms ease-out",
+            }}
           >
             <Text fontSize="4xl" fontWeight="bold">
               Bienvenido
