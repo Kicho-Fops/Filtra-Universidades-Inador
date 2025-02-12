@@ -1,29 +1,42 @@
 import DropText from "../components/DropText";
 import Dropzone from "../components/Dropzone";
-import { Box } from "@chakra-ui/react";
-
+import { Box, Spinner } from "@chakra-ui/react";
+import { useState } from "react";
+import Results from "../components/Results";
 function MainPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [uploadComplete, setUploadComplete] = useState(false);
+
   return (
-    <Box
-      h="100vh"
-      w="100vw"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      m="0"
-    >
-      {/* 
-          Estado 1. Pagina de bienvenida que acepta drop de archivos
-            - El archivo que sea haya subido sea .xlsx
-            - Pop up de error si no es .xlsx
-          Estado 2. Muestra un icono de carga mientras se hace la query a la base de datos
-          Estado 3. Muestra una tabla de resultado
-        
-        
-        */}
-      <Dropzone>
-        <DropText />
-      </Dropzone>
+    <Box h="100vh" w="100vw" display="flex" flexDirection="column" m="0">
+      {isLoading ? (
+        <Box
+          flex="1"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Spinner size="xl" />
+        </Box>
+      ) : uploadComplete ? (
+        <Box
+          p={6}
+          pt={10}
+          display="flex"
+          flexDirection="column"
+          alignItems="flex-start"
+          width="100%"
+        >
+          <Results />
+        </Box>
+      ) : (
+        <Dropzone
+          setIsLoading={setIsLoading}
+          setUploadComplete={setUploadComplete}
+        >
+          <DropText />
+        </Dropzone>
+      )}
     </Box>
   );
 }

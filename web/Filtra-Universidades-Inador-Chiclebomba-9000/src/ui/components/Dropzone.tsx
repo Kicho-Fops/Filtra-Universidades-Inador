@@ -5,12 +5,11 @@ import PopUp from "./GenericPopUp";
 
 interface DropzoneProps {
   children: React.ReactNode;
+  setIsLoading: (loading: boolean) => void;
+  setUploadComplete: (complete: boolean) => void;
 }
 
-interface File {
-  path: string;
-  size: number;
-}
+
 
 function useConfirmationDialog() {
   const [isError, setIsError] = useState(false);
@@ -25,13 +24,51 @@ function useConfirmationDialog() {
   return { setIsError, isError };
 }
 
-function Dropzone({ children }: DropzoneProps) {
+function Dropzone({ children, setIsLoading, setUploadComplete }: DropzoneProps) {
   const { setIsError, isError } = useConfirmationDialog();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [uploading, setUploading] = useState(false);
+
+  const uploadFile = async (file: File) => {
+    setIsLoading(true);
+    setUploading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("http://localhost:8000/v1/excel/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload file");
+      }
+
+      const data = await response.json();
+      console.log("Upload success:", data);
+      setUploadComplete(true);
+      localStorage.setItem("university_data", JSON.stringify(data));
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setIsError(true);
+    } finally {
+      setUploading(false);
+      setIsLoading(false);
+    }
+  };
+
+
+
+
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      if (acceptedFiles[0].path.endsWith(".xlsx")) {
-        console.log(acceptedFiles);
+      if (acceptedFiles[0].name.endsWith(".xlsx")) {
+        console.log(acceptedFiles[0]);
+        uploadFile(acceptedFiles[0]);
       } else {
         setIsError(true);
       }
