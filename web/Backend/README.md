@@ -1,4 +1,6 @@
 
+
+its recommended to create a virtual environment
 Set-ExecutionPolicy Unrestricted -Scope Process
 .venv\Scripts\Activate.ps1
 
